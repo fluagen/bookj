@@ -1,0 +1,22 @@
+{
+  "name": "bookj",
+  "version": "1.0.0",
+  "description": "a simple platform to prepare documents and display documents",
+  "main": "app.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "author": "fluagen",
+  "license": "ISC",
+  "homepage": "https://github.com/fluagen/bookj#readme",
+
+  "dependencies": {
+        "body-parser": "1.15",
+        "express": "4.13.x",
+        "loader": "0.1.4",
+        "lodash": "3.6.0",
+        "ejs": "2.4.1",
+        "mongoose": "4.4.7",
+        "eventproxy": "0.3.4 "
+    }
+}
