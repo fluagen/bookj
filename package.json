@@ -9,14 +9,18 @@
   "author": "fluagen",
   "license": "ISC",
   "homepage": "https://github.com/fluagen/bookj#readme",
-
   "dependencies": {
-        "body-parser": "1.15",
-        "express": "4.13.x",
-        "loader": "0.1.4",
-        "lodash": "3.6.0",
-        "ejs": "2.4.1",
-        "mongoose": "4.4.7",
-        "eventproxy": "0.3.4 "
-    }
+    "body-parser": "1.15",
+    "express": "4.13.x",
+    "loader": "0.1.4",
+    "lodash": "3.6.0",
+    "ejs": "2.4.1",
+    "mongoose": "4.4.7",
+    "eventproxy": "0.3.4 ",
+    "commander": "*",
+    "dox": "*",
+    "marked": "*",
+    "mkdirp": "^0.5.0",
+    "ncp": "*"
+  }
 }
