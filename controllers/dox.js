@@ -3,12 +3,11 @@ var path = require('path');
 var ejs = require('ejs');
 var markdown = require('marked').parse;
 var ncp = require('ncp').ncp;
+var mkdirp = require('mkdirp');
 
-/**
- * 从Markdown中提取标题列表
- * @return {Array} 返回标题列表
- */
-var getIndexs = function(section, level, filter) {
+var config = require('../config');
+
+var getHeaders = function(section, level, filter) {
     level = level || 3; // 默认抽取到三级标题
     level = level > 6 ? 6 : level; // 最大到6级标题
     level = level < 1 ? 1 : level; // 最小到1级标题
@@ -39,50 +38,66 @@ var getIndexs = function(section, level, filter) {
     }
 };
 
-var templates;
-var getTemplates = function(skin) {
-    if (templates) {
-        return templates;
+var templates = [];
+var getTemplate = function(skin) {
+    if (templates[skin]) {
+        return templates[skin];
     }
-    var doc;
+    var template = {};
+
+    var doc = fs.readFileSync(path.join(__dirname, '../templates/' + skin + '/doc.html'), 'utf8');
+
+    template.doc = doc;
+
+    templates[skin] = template;
+    return template;
+};
+
+var getReadme = function(content) {
+    var readme = {};
+    readme.content = markdown(content);
+    readme.headers = getHeaders(content);
+    return readme;
+};
+
+var process = function(appid, readme, package, skin) {
     if (!skin) {
         skin = 'default';
     }
-    var filename = path.join(__dirname, '../templates/' + skin + '/index.html');
-    doc = fs.readFileSync(path.join(__dirname, '../templates/' + skin + '/doc.html'), 'utf8');
-
-    templates = {
-        'doc': doc,
-        'filename': filename
-    };
-    return templates;
-};
-
-
-var build = function(output, sink, ctx) {
-    var content = ctx.content;
-
-    var doc = getTemplates(sink).doc;
+    var template = getTemplate(skin);
+    var docPath = path.join(__dirname, '../doc/' + appid);
+    var docPathExists = fs.existsSync(docPath);
+    if (!docPathExists) {
+        mkdirp.sync(docPath);
+    }
 
     var obj = {};
-    obj.name = 'test';
-    obj.description = 'test';
-    obj.indexs = getIndexs(content);
-    obj.content = markdown(content);
-    obj.filename = path.join(__dirname, '../templates/' + sink + '/index.html');
+    obj.filename = path.join(__dirname, '../templates/' + skin + '/index.html');
+    obj.content = readme.content;
+    obj.headers = readme.headers;
+    obj.name = package.name;
+    obj.author = package.author;
+    obj.description = package.description;
+    obj.version = "0.1";
 
-    fs.writeFileSync(path.join(output, 'index.html'), ejs.render(doc, obj), 'utf-8');
+    //homepage
+    fs.writeFileSync(path.join(docPath, 'index.html'), ejs.render(template.doc, obj), 'utf8');
+    //copy style
+    ncp(path.join(__dirname, '../templates/' + skin + '/assets'), path.join(docPath, 'assets'), function() {});
 
 };
 
-exports.create = function(req, res, next) {
-    var author = req.body.author;
-    var version = req.body.version;
+exports.build = function(req, res, next) {
     var content = req.body.content;
-    var ctx = {};
-    ctx.content = content;
-    var output = path.join(__dirname, '../view/doc');
-    var sink = 'default';
-    build(output, sink, ctx);
+    var readme = getReadme(content);
+    var package = {};
+    package.name = "bookj";
+    package.author = 'majie';
+    package.description = "this is bookj demo";
+    console.log(package);
+
+    process('bookj', readme, package);
+
     next();
+
 };

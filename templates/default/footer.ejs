@@ -12,48 +12,5 @@
           </ul>
       </div>
     </footer>
-    <script>
-      $(function() {
-        $('pre').addClass('prettyprint');
-        $('td pre').removeClass('prettyprint');
-        prettyPrint();
-        var $window = $(window);
-        var sidenav = $('.bs-docs-sidenav');
-        if (sidenav.height() < window.innerHeight) {
-          sidenav.affix({
-            offset: {
-              top: function () {
-                return $window.width() <= 980 ? 290 : 210
-              },
-              bottom: 200
-            }
-          });
-        } else {
-          sidenav.removeClass('affix');
-        }
-        $(".content").find('h1, h2, h3, h4, h5, h6').each(function () {
-          var node = $(this);
-          // 总是设置id
-          node.attr("id", node.data('id') || "index_" + node.text());
-        });
-
-        $('.bs-docs-sidenav .accordion-marker').on('click', function(event) {
-          var current = $(event.currentTarget);
-          current.find('.glyphicon').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-        });
-      });
-    </script>
-  <% if (options.tracker) { %>
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', '<%= options.tracker %>']);
-      _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-  <% } %>
   </body>
 </html>
