@@ -7,11 +7,25 @@
 	<script src="http://cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
 	<script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.js"></script>
 	<style type="text/css">
-	.container {
-		border:  1px solid black;
+	.nav-tabs-my {
+		width: 200px;
+        margin-top: 20px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
 	}
-	.container-fluid {
-		border:  1px solid black;
+	.nav-tabs-my li {
+		margin: 0;
+		border-top: 1px solid #ddd; 
+	}
+	.nav-tabs-my li:first-child {
+		border: none;
+	}
+	.nav-tabs-my li a {
+		margin: 0;
+        
+        border-radius: 0;
+        border: 0;
 	}
 	</style>
 	<head>
@@ -32,10 +46,15 @@
 		
 		<div class="container">
 			<div class="row">
-				<div class="col-md-4">col-md-4</div>
-				<div class="col-md-8">col-md-8</div>
+				<div class="col-md-3"><ul class="nav nav-tabs nav-stacked nav-tabs-my">
+					<li role="presentation" class="active"><a href="#">Home</a></li>
+					<li role="presentation"><a href="#">Profile</a></li>
+					<li role="presentation"><a href="#">Messages</a></li>
+				</ul>
 			</div>
+			<div class="col-md-9">col-md-8</div>
 		</div>
-		
-	</body>
+	</div>
+	
+</body>
 </html>
