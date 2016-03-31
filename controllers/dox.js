@@ -4,10 +4,13 @@ var ejs = require('ejs');
 var markdown = require('marked').parse;
 var ncp = require('ncp').ncp;
 var mkdirp = require('mkdirp');
+var cheerio = require('cheerio');
 
 var config = require('../config');
 
 var getHeaders = function(section, level, filter) {
+
+
     level = level || 3; // 默认抽取到三级标题
     level = level > 6 ? 6 : level; // 最大到6级标题
     level = level < 1 ? 1 : level; // 最小到1级标题
@@ -94,7 +97,10 @@ exports.build = function(req, res, next) {
     package.name = "bookj";
     package.author = 'majie';
     package.description = "this is bookj demo";
-    console.log(package);
+    var $ = cheerio.load(readme.content);
+    $('h1').each(function(i, item) {
+        console.log($(item).text());
+    });
 
     process('bookj', readme, package);
 

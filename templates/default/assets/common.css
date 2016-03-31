@@ -1,0 +1,41 @@
+body {
+    position: relative;
+}
+
+#my-affix {
+	margin-top: 20px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+
+	width: 200px;
+}
+#my-affix li {
+	margin: 0;
+	border-top:  1px solid #ddd;
+}
+
+#my-affix li:first-child {
+        border-top: none;
+}
+
+#my-affix li a {
+	margin: 0;
+	border: none;
+	border-radius: 0;
+}
+
+#my-affix li.active a,
+#my-affix li.active a:hover {
+	border: 1px solid #0088cc;
+	color: #fff;
+	background: #0088cc;
+}
+
+#my-affix li:first-child a {
+	border-radius: 4px 4px 0 0;
+}
+
+#my-affix li:last-child a {
+	border-radius: 0 0 4px 4px;
+}
+
