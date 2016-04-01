@@ -5,41 +5,9 @@ var markdown = require('marked').parse;
 var ncp = require('ncp').ncp;
 var mkdirp = require('mkdirp');
 var cheerio = require('cheerio');
+var _ = require('lodash');
 
 var config = require('../config');
-
-var getHeaders = function(section, level, filter) {
-
-
-    level = level || 3; // 默认抽取到三级标题
-    level = level > 6 ? 6 : level; // 最大到6级标题
-    level = level < 1 ? 1 : level; // 最小到1级标题
-    filter = filter || function(item) {
-        return true;
-    };
-    var matched = section.match(/.*\r?\n(\=+)|#+\s+(.*)/gm);
-    if (matched) {
-        return matched.map(function(item) {
-            if (/#+/.test(item)) {
-                var level = item.match(/#+/)[0].length;
-                var title = item.replace(/#+\s+/, '');
-                return {
-                    level: level,
-                    title: title
-                };
-            } else {
-                return {
-                    level: 1,
-                    title: item.split(/\n/)[0]
-                };
-            }
-        }).filter(function(item) {
-            return item.level <= level;
-        }).filter(filter);
-    } else {
-        return [];
-    }
-};
 
 var templates = [];
 var getTemplate = function(skin) {
@@ -56,11 +24,81 @@ var getTemplate = function(skin) {
     return template;
 };
 
+var findEnd = function(flatdata, obj) {
+    var ends = _.filter(flatdata, function(item) {
+        var tag = item.tag;
+        var index = item.index;
+
+        return item.index > obj.index && item.depth <= obj.depth;
+    });
+    var end = {
+        index: 9999
+    };
+    if (ends && ends.length > 0) {
+        end = ends[0];
+    }
+    return end;
+};
+
+var findParent = function(flatdata, obj) {
+    var parents = _.filter(flatdata, function(item) {
+        return item.depth < obj.depth && item.index < obj.index;
+    });
+    var parent = null;
+    if (parents.length > 0) {
+        parent = parents[parents.length - 1];
+    }
+    return parent;
+};
+
+
+var header_id_prefix = "section_index_";
 var getReadme = function(content) {
     var readme = {};
-    readme.content = markdown(content);
-    readme.headers = getHeaders(content);
+    var html = markdown(content);
+    var $ = cheerio.load(html, {
+        decodeEntities: false
+    });
+    // fill headers id
+    $('h1,h2,h3,h4,h5,h6').each(function(i, item) {
+        $(item).attr('id', header_id_prefix + i);
+    });
+    html = $.html();
+    readme.headers = getHeaders(html);
+    readme.content = html;
     return readme;
+};
+
+var getHeaders = function(html, level) {
+    var $ = cheerio.load(html);
+    var flatdata = [];
+    if (!level) {
+        level = 3;
+    }
+    $('h1,h2,h3').each(function(i, item) {
+        var data = {};
+        data.index = i;
+        data.id = $(item).attr('id');
+        data.tag = $(item).prop("name");
+        data.depth = parseInt(data.tag.substring(1));
+        data.title = $(item).text();
+        data.subs = [];
+        flatdata.push(data);
+    });
+
+    var treedata = [];
+    for (var i = 0; i < flatdata.length; i++) {
+        var data = flatdata[i];
+        if (data.depth == 1) {
+            treedata.push(data);
+            continue;
+        }
+        var parent = findParent(flatdata, data);
+        if (parent) {
+            parent.subs.push(data);
+        }
+    }
+    return treedata;
 };
 
 var process = function(appid, readme, package, skin) {
@@ -74,17 +112,17 @@ var process = function(appid, readme, package, skin) {
         mkdirp.sync(docPath);
     }
 
-    var obj = {};
-    obj.filename = path.join(__dirname, '../templates/' + skin + '/index.html');
-    obj.content = readme.content;
-    obj.headers = readme.headers;
-    obj.name = package.name;
-    obj.author = package.author;
-    obj.description = package.description;
-    obj.version = "0.1";
+    var ctx = {};
+    ctx.filename = path.join(__dirname, '../templates/' + skin + '/index.html');
+    ctx.content = readme.content;
+    ctx.headers = readme.headers;
+    ctx.name = package.name;
+    ctx.author = package.author;
+    ctx.description = package.description;
+    ctx.version = "0.1";
 
     //homepage
-    fs.writeFileSync(path.join(docPath, 'index.html'), ejs.render(template.doc, obj), 'utf8');
+    fs.writeFileSync(path.join(docPath, 'index.html'), ejs.render(template.doc, ctx), 'utf8');
     //copy style
     ncp(path.join(__dirname, '../templates/' + skin + '/assets'), path.join(docPath, 'assets'), function() {});
 
@@ -97,10 +135,6 @@ exports.build = function(req, res, next) {
     package.name = "bookj";
     package.author = 'majie';
     package.description = "this is bookj demo";
-    var $ = cheerio.load(readme.content);
-    $('h1').each(function(i, item) {
-        console.log($(item).text());
-    });
 
     process('bookj', readme, package);
 
