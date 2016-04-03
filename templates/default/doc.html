@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="assets/common.css">
 	<script src="http://cdn.bootcss.com/jquery/2.2.1/jquery.js"></script>
 	<script src="http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.js"></script>
+	<script type="text/javascript" src="assets/common.js"></script>
 	<head>
 		<title></title>
 	</head>
@@ -26,13 +27,18 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3" id="myscrollspy">
-					<ul id="my-affix" class="nav nav-tabs nav-stacked nav-tabs-my" data-spy="affix">
+					<ul id="my-affix" class="nav nav-tabs nav-stacked aside-nav" data-spy="affix">
 					<%
 					for(var i=0; i<headers.length; i++){
 						var obj = headers[i];
 					%>
 						<li role="presentation">
 							<a href="#<%= obj.id %>"><%= obj.title%></a>
+							<%
+							if(obj.subs.length > 0){
+							%>
+							<%- include('h2', {rst: obj.subs}) %>
+							<%}%>
 						</li>
 					<% }%>
 					</ul>
@@ -40,13 +46,8 @@
 				<div class="col-md-9"><%- content %></div>
 			</div>
 		</div>
-		
+		<footer class="footer">
+			
+		</footer>
 	</body>
-	<script type="text/javascript">
-		$('#my-affix').affix({
-		offset: {
-		top: $('#my-affix').offset().top
-		}
-		});
-	</script>
 </html>

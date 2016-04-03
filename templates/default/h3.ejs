@@ -1,0 +1,12 @@
+<ul class="nav">
+	<%
+	for(var i=0; i<rst_h3.length; i++){
+		var obj = rst_h3[i];
+	%>
+	<li role="presentation">
+		<a href="#<%= obj.id %>"><%= obj.title%></a>
+	</li>
+	<%
+	}
+	%>
+</ul>
