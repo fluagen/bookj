@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title></title>
+		<%- Loader('/public/editor.min.css')
+		.css('/public/libs/editor/simplemde.min.css')
+		.done(assets, config.site_static_host, config.mini_assets) %>
+		<%- Loader('/public/editor.min.js')
+		.js('/public/libs/jquery-1.12.1.min.js')
+		.js('/public/libs/editor/simplemde.min.js')
+		.done(assets, config.site_static_host, config.mini_assets) %>
+	</head>
+	<body>
+		<div>
+			<form action="/a/create" method="post">
+			<input type="text" name ="title" value="title"></input>
+			<textarea name="description" id="description"></textarea>
+			</form>
+		</div>
+		
+		<div><span><a id="btn-save" href="#">保存</a></span></div>
+	</body>
+	<%- Loader('/public/editor.min.js')
+		.js('/public/libs/jquery-1.12.1.min.js')
+		.js('/public/libs/editor/simplemde.min.js')
+		.done(assets, config.site_static_host, config.mini_assets) %>
+	<script type="text/javascript">
+	var simplemde = new SimpleMDE();
+	$('#btn-save').click(function(){
+		$('#description').val(simplemde.value());
+		$('form').submit();
+		return false;
+	});
+		
+	</script>
+</html>

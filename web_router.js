@@ -1,13 +1,12 @@
-
 var express = require('express');
 
-var dox = require('./controllers/dox');
+var article = require('./controllers/article');
 
 var router = express.Router();
 
-router.get('/',function(req,res,next){
-	res.render('index',{});
-});
-router.post('/dox/build',dox.build);
+router.get('/', article.index);
+
+router.get('/a/create', article.create);
+router.post('/a/create', article.put);
 
 module.exports = router;

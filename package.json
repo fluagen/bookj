@@ -18,10 +18,10 @@
     "mongoose": "4.4.7",
     "eventproxy": "0.3.4 ",
     "commander": "*",
-    "dox": "*",
     "marked": "*",
     "mkdirp": "0.5.1",
     "ncp": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "moment": "*"
   }
 }
