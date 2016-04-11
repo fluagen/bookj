@@ -3,9 +3,9 @@ var BaseModel = require("./base_model");
 var Schema    = mongoose.Schema;
 var ObjectId  = Schema.ObjectId;
 
-var ArticleSchema = new Schema({
+var TopicSchema = new Schema({
   title: { type: String },
-  descripion: {type: String},
+  description: {type: String},
   content: { type: String },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
@@ -13,7 +13,7 @@ var ArticleSchema = new Schema({
   deleted: {type: Boolean, default: false},
 });
 
-ArticleSchema.plugin(BaseModel);
-ArticleSchema.index({create_at: -1});
+TopicSchema.plugin(BaseModel);
+TopicSchema.index({create_at: -1});
 
-mongoose.model('Article', ArticleSchema);
+mongoose.model('Topic', TopicSchema);

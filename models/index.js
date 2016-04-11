@@ -11,7 +11,7 @@ mongoose.connect(config.db, {
 });
 
 // models
-require('./article');
+require('./topic');
 
-exports.Article        = mongoose.model('Article');
+exports.Topic        = mongoose.model('Topic');
 

@@ -1,12 +1,15 @@
 var express = require('express');
 
-var article = require('./controllers/article');
+var topic = require('./controllers/topic');
+var site = require('./controllers/site');
 
 var router = express.Router();
 
-router.get('/', article.index);
+router.get('/', site.index);
 
-router.get('/a/create', article.create);
-router.post('/a/create', article.put);
+router.get('/t/create', topic.create);
+router.get('/t/:tid', topic.index);
+
+router.post('/t/create', topic.put);
 
 module.exports = router;

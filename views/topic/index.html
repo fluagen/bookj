@@ -26,19 +26,10 @@
 			<div class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-8">
-					<%
-					for(var i=0; i < topics.length; i++){
-					var topic = topics[i];
-					%>
-					<div class="panel panel-default">
-						<div class="panel-heading"><a href="/t/<%= topic._id%>"><%= topic.title%></a></div>
-						<div class="panel-body">
-							<%= topic.description%>
-						</div>
-					</div>
-					<%
-					}
-					%>
+
+				<p><%= topic.title%></p>
+				<p><%= topic.content%></p>
+					
 				</div>
 				<div class="col-md-2"></div>
 			</div>

@@ -1,2 +1,2 @@
 
-exports.article = require('./article');
+exports.topic = require('./topic');
