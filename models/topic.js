@@ -9,7 +9,7 @@ var TopicSchema = new Schema({
   content: { type: String },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
-  public: {type: Boolean, default: true},
+  org_ids: {type: String},
   deleted: {type: Boolean, default: false},
 });
 

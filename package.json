@@ -14,7 +14,7 @@
     "express": "4.13.x",
     "loader": "0.1.4",
     "lodash": "3.6.0",
-    "ejs": "2.4.1",
+    "ejs-mate": "*",
     "mongoose": "4.4.7",
     "eventproxy": "0.3.4 ",
     "commander": "*",

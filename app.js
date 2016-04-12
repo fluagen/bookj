@@ -14,9 +14,10 @@ var app = express();
 var staticDir = path.join(__dirname, 'public');
 
 //设置环境上下文
-app.engine('html', require('ejs').__express);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
+app.engine('html', require('ejs-mate'));
+
 
 //静态资源
 app.use('/public',express.static(staticDir));

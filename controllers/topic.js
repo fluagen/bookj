@@ -27,7 +27,7 @@ exports.edit = function(req, res, next) {
 exports.put = function(req, res, next) {
     var title = req.body.title;
     var description = req.body.description;
-    var public = true;
+    var org_id = '';
     var content = req.body.content;
 
     topicManager.newAndSave(title, description, public, content, function(err, rst) {

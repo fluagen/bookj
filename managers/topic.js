@@ -26,11 +26,11 @@ exports.list = function(query, callback) {
     });
 };
 
-exports.newAndSave = function(title, description, public, content, callback) {
+exports.newAndSave = function(title, description, org_ids, content, callback) {
     var topic = new Topic();
     topic.title = title;
     topic.description = description;
-    topic.public = public;
+    topic.org_ids = org_ids;
     topic.content = content;
     topic.save(callback);
 };

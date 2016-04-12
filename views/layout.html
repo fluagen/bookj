@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title></title>
+		<%- Loader('/public/index.css')
+		.css('http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css')
+		.done(assets, config.site_static_host, config.mini_assets) %>
+		<%- Loader('/public/index.min.js')
+		.js('http://cdn.bootcss.com/jquery/2.2.1/jquery.js')
+		.js('http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.js')
+		.js('/public/libs/editor/simplemde.min.js')
+		.done(assets, config.site_static_host, config.mini_assets) %>
+		<style type="text/css">
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-static-top top-navbar">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Jeeko</a>
+				</div>
+			</div>
+		</nav>
+		<%-body -%>
+		<footer></footer>
+	</body>
+</html>
