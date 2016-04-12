@@ -29,8 +29,8 @@ exports.put = function(req, res, next) {
     var description = req.body.description;
     var org_id = '';
     var content = req.body.content;
-
-    topicManager.newAndSave(title, description, public, content, function(err, rst) {
+console.log(title);
+    topicManager.newAndSave(title, description, org_id, content, function(err, rst) {
         res.redirect('/');
 
     });

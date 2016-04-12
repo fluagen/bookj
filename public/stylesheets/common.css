@@ -1,0 +1,15 @@
+.topic-row
+{
+    display: flex;
+}
+.topic-row-item
+{
+    flex: 1;
+}
+.spa10w
+{
+    width: 10px;
+}
+.topic-row-item-badge {
+	align-self: center;
+}
