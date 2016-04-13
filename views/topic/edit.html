@@ -7,13 +7,18 @@
 </div>
 
 <div><span><a id="btn-save" href="#">保存</a></span></div>
-</body>
-<script type="text/javascript">
-var simplemde = new SimpleMDE();
-$('#btn-save').click(function(){
-	$('#content').val(simplemde.value());
-	$('form').submit();
-	return false;
-});
-	
-</script>
+
+<% 
+
+var str = "<script >"
+		+"var simplemde = new SimpleMDE();"
+			+"$('#btn-save').click(function(){"
+			+"$('#content').val(simplemde.value());"
+			+"$('form').submit();"
+			+"return false;"
+			+"});"
+	+"</script>";
+
+block('script').append(str) 
+
+%>
