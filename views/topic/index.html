@@ -1,38 +1,41 @@
-<!DOCTYPE html>
-<html lang="zh">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title></title>
-		<%- Loader('/public/index.css')
-		.css('http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css')
-		.done(assets, config.site_static_host, config.mini_assets) %>
-		<%- Loader('/public/editor.min.js')
-		.js('http://cdn.bootcss.com/jquery/2.2.1/jquery.js')
-		.js('http://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.js')
-		.done(assets, config.site_static_host, config.mini_assets) %>
-		<style type="text/css">
-		</style>
-	</head>
-	<body>
-		<nav class="navbar navbar-inverse navbar-static-top top-navbar">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="#">Jeeko</a>
-				</div>
+<% layout('layout') -%>
+<div class="row">
+	<div class="col-md-9">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<b class="panel-title"><%= topic.title%></b>
 			</div>
-		</nav>
-		<div class="container">
-			
-			<div class="row">
-				<div class="col-md-2"></div>
-				<div class="col-md-8">
-
-				<p><%= topic.title%></p>
-				<p><%= topic.content%></p>
-					
-				</div>
-				<div class="col-md-2"></div>
+			<div class="panel-body">
+				<%= topic.content%>
 			</div>
 		</div>
-	</body>
-</html>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				回复
+			</div>
+			<div class="panel-body">
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				添加回复
+			</div>
+			<div class="panel-body">
+				<textarea name="content" id="content" class="form-control" rows="3" placeholder="添加回复"></textarea>
+			</div>
+			<div class="panel-footer">
+				<a class="btn btn-success" id="btn-save" href="#" role="button">回复
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<%- partial('./_profile') %>
+	</div>
+</div>
+<%
+var str = 	"<script >"
+	+"var simplemde = new SimpleMDE({ element: document.getElementById('content')});"
++"</script>";
+block('script').append(str)
+%>

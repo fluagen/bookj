@@ -22,7 +22,6 @@ exports.list = function(query, callback) {
         if (topics.length === 0) {
             return callback(null, []);
         }
-        console.log(topics.length);
         return callback(null, topics);
     });
 };
