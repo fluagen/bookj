@@ -1,5 +1,6 @@
 var models = require('../models');
 var Topic = models.Topic;
+var EventProxy = require('eventproxy');
 
 exports.getFullTopic = function(id, callback) {
 
@@ -7,23 +8,25 @@ exports.getFullTopic = function(id, callback) {
         _id: id,
         deleted: false
     });
-    q.exec(function(err, topic) {
-        callback(null, topic);
+
+    var ep = new EventProxy();
+    ep.all('topic', function(topic){
+        callback(null, topics);
     });
+    ep.fail(callback);
+    q.exec(ep.done('topic'));
 };
 
 exports.list = function(query, callback) {
     var q = Topic.find(query);
 
-    q.exec(function(err, topics) {
-        if (err) {
-            return callback(err);
-        }
-        if (topics.length === 0) {
-            return callback(null, []);
-        }
-        return callback(null, topics);
+    var ep = new EventProxy();
+    ep.all('topics', function(topics){
+        callback(null, topics);
     });
+    ep.fail(callback);
+    q.exec(ep.done('topics'));
+    
 };
 
 exports.newAndSave = function(title, description, org_ids, content, callback) {

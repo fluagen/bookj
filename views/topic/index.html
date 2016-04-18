@@ -3,10 +3,10 @@
 	<div class="col-md-9">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<b class="panel-title"><%= topic.title%></b>
+				<b class="panel-title"><%= rst.topic.title%></b>
 			</div>
 			<div class="panel-body">
-				<%= topic.content%>
+				<%= rst.topic.content%>
 			</div>
 		</div>
 		<div class="panel panel-default">
@@ -14,6 +14,14 @@
 				回复
 			</div>
 			<div class="panel-body">
+				<ul>
+					<%
+					for(var i=0; i<rst.replies.length; i++){
+					var reply = rst.replies[i];
+					%>
+					<li><%= reply.content%></li>
+					<% } %>
+				</ul>
 			</div>
 		</div>
 		<div class="panel panel-default">
@@ -21,7 +29,10 @@
 				添加回复
 			</div>
 			<div class="panel-body">
-				<textarea name="content" id="content" class="form-control" rows="3" placeholder="添加回复"></textarea>
+				<form id='reply_form' action='/<%= rst.topic._id %>/reply' method='post'>
+					<textarea name="r_content" id="r_content" class="form-control" rows="3" placeholder="添加回复"></textarea>
+				</form>
+				
 			</div>
 			<div class="panel-footer">
 				<a class="btn btn-success" id="btn-save" href="#" role="button">回复
@@ -34,8 +45,14 @@
 	</div>
 </div>
 <%
-var str = 	"<script >"
-	+"var simplemde = new SimpleMDE({ element: document.getElementById('content')});"
+var str =
+"<script >"
+	+"var simplemde = new SimpleMDE({ element: document.getElementById('r_content')});"
+	+"$('#btn-save').click(function(){"
+		+"$('#r_content').val(simplemde.value());"
+		+"$('#reply_form').submit();"
+		+"return false;"
+	+"});"
 +"</script>";
 block('script').append(str)
 %>
