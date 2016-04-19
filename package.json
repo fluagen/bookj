@@ -22,6 +22,8 @@
     "mkdirp": "0.5.1",
     "ncp": "*",
     "cheerio": "*",
-    "moment": "*"
+    "moment": "*",
+    "validator": "5.2.0",
+    "bcrypt": "0.8.5"
   }
 }

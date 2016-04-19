@@ -5,7 +5,7 @@ var UserSchema = new Schema({
     name: {
         type: String
     },
-    loginId: {
+    loginname: {
         type: String
     },
     password: {
