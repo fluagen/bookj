@@ -3,11 +3,15 @@ var topicManager = manager.topic;
 
 exports.index = function(req, res, next) {
     var query = {
-        
+
     };
     topicManager.list(query, function(err, rst) {
         res.render('index', {
             topics: rst
         });
     });
+};
+
+exports.signup = function(req, res, next) {
+    res.render('sign/signup');
 };

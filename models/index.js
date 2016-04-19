@@ -21,4 +21,3 @@ require('./localauth');
 exports.Topic = mongoose.model('Topic');
 exports.Reply = mongoose.model('Reply');
 exports.User = mongoose.model('User');
-exports.LocalAuth = mongoose.model('LocalAuth');

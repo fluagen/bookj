@@ -5,6 +5,12 @@ var UserSchema = new Schema({
     name: {
         type: String
     },
+    loginId: {
+        type: String
+    },
+    password: {
+        type: String
+    },
     email: {
         type: String
     }
