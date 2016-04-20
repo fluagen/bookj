@@ -2,11 +2,12 @@ var models = require('../models');
 var User = models.User;
 var EventProxy = require('eventproxy');
 
-exports.newAndSave = function(loginname, password, email, callback) {
+exports.newAndSave = function(loginname, pass, email, avatar, callback) {
     var user = new User();
     user.loginname = loginname;
-    user.password = password;
+    user.pass = pass;
     user.email = email;
+    user.avatar = avatar;
     user.save(callback);
 };
 
@@ -19,10 +20,10 @@ exports.getUserById = function(id, callback) {
 
 exports.getUsersByNameOrEmail = function(loginname, email, callback) {
     var query = User.find();
-    query = query.or({
+    query = query.or([{
         'loginname': loginname
     }, {
         'email': email
-    });
+    }]);
     query.exec(callback);
 };

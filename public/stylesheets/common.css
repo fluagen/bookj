@@ -27,3 +27,10 @@
 .topic-row-item-badge {
 	align-self: center;
 }
+
+.bg-warning-classes {
+    padding: 15px;
+    color: #b94a48;
+    background-color: #F2DEDE;
+
+}

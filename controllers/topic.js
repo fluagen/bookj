@@ -22,9 +22,6 @@ exports.index = function(req, res, next) {
     replyManager.getRepliesByTopicId(topic_id, ep.done('replies'));
 };
 
-exports.showPrivate = function(req, res, next) {
-
-};
 
 exports.create = function(req, res, next) {
     res.render('topic/edit');

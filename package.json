@@ -24,6 +24,7 @@
     "cheerio": "*",
     "moment": "*",
     "validator": "5.2.0",
-    "bcrypt": "0.8.5"
+    "bcrypt": "0.8.5",
+    "utility": "*"
   }
 }

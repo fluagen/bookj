@@ -2,33 +2,46 @@
 <div class="row">
 	<div class="col-md-9">
 		<div class="panel panel-default">
-			<div class="panel-heading"><a href="/">首页</a>/注册</div>
+			<div class="panel-heading"><a href="/">首页</a> / 注册</div>
 			<div class="panel-body">
-				<form class="form-horizontal" id="register" action="/register" method="post">
+				<% if (typeof(error) !== 'undefined' && error) { %>
+				<p class="bg-warning-classes"><strong><%= error%></strong></p>
+				<%
+				}
+				%>
+				
+				<form class="form-horizontal" id="signup" action="/signup" method="post">
 					<div class="form-group">
-						<label class="col-md-4 control-label" for="loginId">用户名</label>
+						<label class="col-md-4 control-label" for="loginname">用户名</label>
 						<div class="col-md-4">
-							<input id="loginId" name="loginId" type="text" placeholder="" class="form-control input-md" required="">
+							<% if (typeof(loginname) !== 'undefined') { %>
+							<input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于6位" class="form-control input-md" required="" value="<%=loginname%>"></input>
+							 <% } else { %>
+							 <input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于6位" class="form-control input-md" required=""></input>
+							 <% } %>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-md-4 control-label" for="name">密码</label>
+						<label class="col-md-4 control-label" for="pass">密码</label>
 						<div class="col-md-4">
-							<input id="password" name="password" type="password" placeholder="" class="form-control input-md" required="">
+							<input id="pass" name="pass" type="password" placeholder="不少于6位" class="form-control input-md" required=""></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="re_pass">密码确认</label>
+						<div class="col-md-4">
+							<input id="re_pass" name="re_pass" type="password" placeholder="" class="form-control input-md" required=""></input>
 							
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-md-4 control-label" for="name">密码确认</label>
+						<label class="col-md-4 control-label" for="email">email</label>
 						<div class="col-md-4">
-							<input id="re-password" name="re-password" type="password" placeholder="" class="form-control input-md" required="">
-							
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-md-4 control-label" for="name">email</label>
-						<div class="col-md-4">
-							<input id="email" name="email" type="email" placeholder="" class="form-control input-md" required="">
+							<% if (typeof(email) !== 'undefined') { %>
+							<input id="email" name="email" type="email" placeholder="" class="form-control input-md" required="" value="<%=email%>"></input>
+							<% } else { %>
+							<input id="email" name="email" type="email" placeholder="" class="form-control input-md" required=""></input>
+							<% } %>
 							
 						</div>
 					</div>
@@ -49,7 +62,7 @@
 <%
 var str = "<script>";
 str.concat("$('#register-btn').click(function(){");
-str.concat("$('#register').submit();");
+str.concat("$('#signup').submit();");
 str.concat("});");
 str.concat("</script>");
 block('tail-script').append(str);

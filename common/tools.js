@@ -1,5 +1,6 @@
 var bcrypt = require('bcrypt');
 var moment = require('moment');
+var utility = require('utility');
 
 moment.locale('zh-cn'); // 使用中文
 
@@ -25,4 +26,8 @@ exports.bhash = function (str, callback) {
 
 exports.bcompare = function (str, hash, callback) {
   bcrypt.compare(str, hash, callback);
+};
+
+exports.makeGravatar = function (email) {
+  return 'http://www.gravatar.com/avatar/' + utility.md5(email.toLowerCase()) + '?size=48';
 };

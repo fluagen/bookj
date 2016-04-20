@@ -8,11 +8,18 @@ var UserSchema = new Schema({
     loginname: {
         type: String
     },
-    password: {
+    pass: {
         type: String
     },
     email: {
         type: String
+    },
+    avatar: {
+        type: String
+    },
+    active: {
+        type: Boolean,
+        default: false
     }
 });
 
