@@ -9,16 +9,19 @@
 				<%
 				}
 				%>
-				
+				<%if(typeof(success) !== 'undefined' && success){
+				%>
+				<p class="text-success bg-success-classes"><strong><%= success%></strong></p>
+				<%}else{%>
 				<form class="form-horizontal" id="signup" action="/signup" method="post">
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="loginname">用户名</label>
 						<div class="col-md-4">
 							<% if (typeof(loginname) !== 'undefined') { %>
 							<input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于6位" class="form-control input-md" required="" value="<%=loginname%>"></input>
-							 <% } else { %>
-							 <input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于6位" class="form-control input-md" required=""></input>
-							 <% } %>
+							<% } else { %>
+							<input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于6位" class="form-control input-md" required=""></input>
+							<% } %>
 						</div>
 					</div>
 					<div class="form-group">
@@ -48,10 +51,11 @@
 					<div class="form-group">
 						<label class="col-md-4 control-label" for="register-btn"></label>
 						<div class="col-md-8">
-							<button id="register-btn" name="register-btn" class="btn btn-success">注册</button>
+							<input name="register-btn" type="submit" class="btn btn-success" value="注册"></input>
 						</div>
 					</div>
 				</form>
+				<%}%>
 			</div>
 		</div>
 	</div>
@@ -59,11 +63,3 @@
 		<%- partial('./_profile') %>
 	</div>
 </div>
-<%
-var str = "<script>";
-str.concat("$('#register-btn').click(function(){");
-str.concat("$('#signup').submit();");
-str.concat("});");
-str.concat("</script>");
-block('tail-script').append(str);
-%>
