@@ -20,6 +20,10 @@ var UserSchema = new Schema({
     active: {
         type: Boolean,
         default: false
+    },
+    frozen: {
+        type: Boolean,
+        default: false
     }
 });
 

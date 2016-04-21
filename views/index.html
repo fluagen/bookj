@@ -7,16 +7,21 @@
 			for(var i=0; i < topics.length; i++){
 			var topic = topics[i];
 			%>
-			<div class="list-group-item topic-row">
-				<span>img</span>
-				<span class="spa10w"></span>
-				<div class="topic-row-item">
-					<span><%= topic.title%></span>
+			<div class="list-group-item list-topic">
+				<a><%%></a>
+				<span class="slice10"></span>
+				<div class="list-topic-cell">
+					<span class="list-topic-cell-title "><a href="/t/<%= topic._id%>"><%= topic.title%></a></span>
 					<div></div>
-					<span>creator.3分钟前</span>
+					<span class="list-topic-cell-info">
+						<a href="#">lisi</a>
+						&nbsp;•&nbsp;  最后由 
+						<a href="#">zhangsan</a> 于 19 分钟前回复
+
+					</span>
 				</div>
-				<span class="spa10w"></span>
-				<span class="badge topic-row-item-badge">14</span>
+				<span class="slice10"></span>
+				<span class="badge list-topic-cell-center">14</span>
 			</div>
 			<%
 			}
@@ -24,6 +29,6 @@
 		</div>
 	</div>
 	<div class="col-md-3">
-		<%- partial('./_profile') %>
+		<%- partial('./sidebar') %>
 	</div>
 </div>
