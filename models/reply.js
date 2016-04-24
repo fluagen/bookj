@@ -10,6 +10,7 @@ var ReplySchema = new Schema({
   reply_id: { type: ObjectId },
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now },
+  ups: [Schema.Types.ObjectId],
   deleted: {type: Boolean, default: false},
 });
 
