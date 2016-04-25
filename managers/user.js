@@ -2,6 +2,7 @@ var models = require('../models');
 var User = models.User;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
+var uuid = require('node-uuid');
 
 /**
  * 根据登录名查找用户
@@ -11,8 +12,10 @@ var tools = require('../common/tools');
  * @param {String} loginName 登录名
  * @param {Function} callback 回调函数
  */
-exports.getUserByLoginName = function (loginName, callback) {
-  User.findOne({'loginname': loginName}, callback);
+exports.getUserByLoginName = function(loginName, callback) {
+    User.findOne({
+        'loginname': loginName
+    }, callback);
 };
 
 /**
@@ -23,11 +26,13 @@ exports.getUserByLoginName = function (loginName, callback) {
  * @param {String} id 用户ID
  * @param {Function} callback 回调函数
  */
-exports.getUserById = function (id, callback) {
-  if (!id) {
-    return callback();
-  }
-  User.findOne({_id: id}, callback);
+exports.getUserById = function(id, callback) {
+    if (!id) {
+        return callback();
+    }
+    User.findOne({
+        _id: id
+    }, callback);
 };
 
 /**
@@ -38,8 +43,12 @@ exports.getUserById = function (id, callback) {
  * @param {Array} ids 用户ID列表
  * @param {Function} callback 回调函数
  */
-exports.getUsersByIds = function (ids, callback) {
-  User.find({'_id': {'$in': ids}}, callback);
+exports.getUsersByIds = function(ids, callback) {
+    User.find({
+        '_id': {
+            '$in': ids
+        }
+    }, callback);
 };
 
 /**
@@ -50,8 +59,10 @@ exports.getUsersByIds = function (ids, callback) {
  * @param {String} email 邮箱地址
  * @param {Function} callback 回调函数
  */
-exports.getUserByMail = function (email, callback) {
-  User.findOne({email: email}, callback);
+exports.getUserByMail = function(email, callback) {
+    User.findOne({
+        email: email
+    }, callback);
 };
 
 /**
@@ -63,8 +74,8 @@ exports.getUserByMail = function (email, callback) {
  * @param {Object} opt 选项
  * @param {Function} callback 回调函数
  */
-exports.getUsersByQuery = function (query, opt, callback) {
-  User.find(query, '', opt, callback);
+exports.getUsersByQuery = function(query, opt, callback) {
+    User.find(query, '', opt, callback);
 };
 
 /**
@@ -76,22 +87,29 @@ exports.getUsersByQuery = function (query, opt, callback) {
  * @param {String} key 激活码
  * @param {Function} callback 回调函数
  */
-exports.getUserByNameAndKey = function (loginname, key, callback) {
-  User.findOne({loginname: loginname, retrieve_key: key}, callback);
+exports.getUserByNameAndKey = function(loginname, key, callback) {
+    User.findOne({
+        loginname: loginname,
+        retrieve_key: key
+    }, callback);
 };
 
-exports.newAndSave = function (loginname, pass, email, avatar_url, active, callback) {
-  var user         = new User();
-  user.loginname   = loginname;
-  user.pass        = pass;
-  user.email       = email;
-  user.avatar      = avatar_url;
-  user.active      = active || false;
-  user.accessToken = uuid.v4();
+exports.newAndSave = function(loginname, pass, email, avatar_url, active, callback) {
+    if (typeof active === 'function') {
+        callback = active;
+        active = false;
+    }
+    var user = new User();
+    user.loginname = loginname;
+    user.pass = pass;
+    user.email = email;
+    user.avatar = avatar_url;
+    user.active = active || false;
+    user.accessToken = uuid.v4();
 
-  user.save(callback);
+    user.save(callback);
 };
 
-exports.getGravatar = function (user) {
-  return user.avatar || tools.makeGravatar(user.email);
+exports.getGravatar = function(user) {
+    return user.avatar || tools.makeGravatar(user.email);
 };

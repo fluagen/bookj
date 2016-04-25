@@ -4,6 +4,8 @@ var EventProxy = require('eventproxy');
 var userManager = require('./user');
 var replyManager = require('./reply');
 
+var _            = require('lodash');
+
 
 /**
  * 根据主题ID获取主题

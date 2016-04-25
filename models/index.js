@@ -16,7 +16,6 @@ mongoose.connect(config.db, {
 require('./topic');
 require('./reply');
 require('./user');
-require('./localauth');
 
 exports.Topic = mongoose.model('Topic');
 exports.Reply = mongoose.model('Reply');

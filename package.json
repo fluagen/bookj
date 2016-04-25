@@ -12,6 +12,8 @@
   "dependencies": {
     "body-parser": "1.15",
     "express": "4.13.x",
+    "cookie-parser": "*",
+    "express-session": "*",
     "loader": "0.1.4",
     "lodash": "3.6.0",
     "ejs-mate": "*",
@@ -25,6 +27,7 @@
     "moment": "*",
     "validator": "5.2.0",
     "bcrypt": "0.8.5",
-    "utility": "*"
+    "utility": "*",
+    "node-uuid": "*"
   }
 }

@@ -16,5 +16,7 @@ router.post('/:topic_id/reply', reply.add);
 
 router.get('/signup', sign.showSignup);
 router.post('/signup', sign.signup);
+router.get('/signin', sign.showLogin);
+router.post('/signin', sign.login);
 
 module.exports = router;

@@ -2,6 +2,7 @@ var config = require('./config');
 
 var path = require('path');
 var express = require('express');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
 var webRouter = require('./web_router');
@@ -27,6 +28,12 @@ app.use('/public',express.static(staticDir));
 //中间件
 app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
+app.use(require('cookie-parser')('bookj'));
+app.use(session({
+  secret: 'bookj',
+  resave: true,
+  saveUninitialized: true,
+}));
 
 //assets
 var assets = {};

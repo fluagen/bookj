@@ -1,0 +1,38 @@
+<% layout('layout') -%>
+<div class="row">
+	<div class="col-md-9">
+		<div class="panel panel-default">
+			<div class="panel-heading"><a href="/">首页</a> / 登录</div>
+			<div class="panel-body">
+				<% if (typeof(error) !== 'undefined' && error) { %>
+				<p class="bg-warning-classes"><strong><%= error%></strong></p>
+				<%
+				}
+				%>
+				<form class="form-horizontal" id="signin" action="/signin" method="post">
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="loginname">用户名</label>
+						<div class="col-md-4">
+							<input id="loginname" name="loginname" type="text" placeholder="" class="form-control input-md" required=""></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="pass">密码</label>
+						<div class="col-md-4">
+							<input id="pass" name="pass" type="password" placeholder="" class="form-control input-md" required=""></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="login-btn"></label>
+						<div class="col-md-8">
+							<input name="login-btn" type="submit" class="btn btn-success" value="登录"></input>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<%- partial('./_profile') %>
+	</div>
+</div>

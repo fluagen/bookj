@@ -1,17 +1,21 @@
-var manager = require('../managers');
-var topicManager = manager.topic;
+var EventProxy = require('eventproxy');
+var topicManager = require('../managers/topic');
+var config = require('../config');
+
 
 exports.index = function(req, res, next) {
-    var query = {
-
-    };
-    topicManager.list(query, function(err, rst) {
+    
+    var ep = new EventProxy();
+    ep.all('topics', function(topics) {
         res.render('index', {
-            topics: rst
+            topics: topics
         });
     });
-};
+    var query = {};
+    var limit = config.list_topic_count;
+    var options = {
+        sort: '-last_reply_at'
+    };
 
-exports.signup = function(req, res, next) {
-    res.render('sign/signup');
+    topicManager.getTopicsByQuery(query, options, ep.done('topics'));
 };
