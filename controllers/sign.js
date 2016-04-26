@@ -3,6 +3,7 @@ var EventProxy = require('eventproxy');
 var config = require('../config');
 var tools = require('../common/tools');
 var userManager = require('../managers/user');
+var authMiddleWare = require('../middlewares/auth');
 
 //sign up
 exports.showSignup = function(req, res) {
@@ -152,7 +153,7 @@ exports.login = function(req, res, next) {
                 });
             }
             // store session cookie
-            //authMiddleWare.gen_session(user, res);
+            authMiddleWare.gen_session(user, res);
             //check at some page just jump to home page
             var refer = req.session._loginReferer || '/';
             for (var i = 0, len = notJump.length; i !== len; ++i) {

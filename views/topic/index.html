@@ -3,10 +3,10 @@
 	<div class="col-md-9">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<b class="panel-title"><%= rst.topic.title%></b>
+				<b class="panel-title"><%= topic.title%></b>
 			</div>
 			<div class="panel-body">
-				<%= rst.topic.content%>
+				<%= topic.content%>
 			</div>
 		</div>
 		<div class="panel panel-default">
@@ -16,8 +16,8 @@
 			<div class="panel-body">
 				<ul>
 					<%
-					for(var i=0; i<rst.replies.length; i++){
-					var reply = rst.replies[i];
+					for(var i=0; i < topic.replies.length; i++){
+					var reply = topic.replies[i];
 					%>
 					<li><%= reply.content%></li>
 					<% } %>
@@ -29,7 +29,7 @@
 				添加回复
 			</div>
 			<div class="panel-body">
-				<form id='reply_form' action='/<%= rst.topic._id %>/reply' method='post'>
+				<form id='reply_form' action='/<%= topic._id %>/reply' method='post'>
 					<textarea name="r_content" id="r_content" class="form-control" rows="3" placeholder="添加回复"></textarea>
 				</form>
 				
@@ -41,7 +41,7 @@
 		</div>
 	</div>
 	<div class="col-md-3">
-		<%- partial('./_profile') %>
+		<%- partial('./sidebar') %>
 	</div>
 </div>
 <%

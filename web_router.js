@@ -9,9 +9,9 @@ var router = express.Router();
 
 router.get('/', site.index);
 
-router.get('/t/create', topic.create);
-router.get('/t/:tid', topic.index);
-router.post('/t/create', topic.put);
+router.get('/topic/create', topic.create);
+router.get('/topic/:tid', topic.index);
+router.post('/topic/create', topic.put);
 router.post('/:topic_id/reply', reply.add);
 
 router.get('/signup', sign.showSignup);

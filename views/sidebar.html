@@ -1,9 +1,9 @@
 
 <div id='sidebar'>
   <% if (typeof(current_user) !== 'undefined' && current_user) { %>
-  <%- partial('user/profile.html',{ current_user, as: 'user' }) %>
+  <%- partial('side/card.html',{ object: current_user, as: 'user' }) %>
   <% } else {%>
-  <%- partial('side/login_panel') %>
+  <%- partial('side/login') %>
   <% }%>
 </div>
 

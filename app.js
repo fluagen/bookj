@@ -8,6 +8,8 @@ var _ = require('lodash');
 var webRouter = require('./web_router');
 var Loader = require('loader');
 
+var auth = require('./middlewares/auth');
+
 
 var app = express();
 
@@ -34,6 +36,10 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
 }));
+
+// custom middleware
+app.use(auth.authUser);
+app.use(auth.blockUser());
 
 //assets
 var assets = {};
