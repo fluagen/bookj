@@ -5,6 +5,7 @@ var userManager = require('./user');
 var replyManager = require('./reply');
 
 var _            = require('lodash');
+var tools = require('../common/tools');
 
 
 /**

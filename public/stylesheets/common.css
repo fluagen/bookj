@@ -15,6 +15,25 @@
     background-color: #dff0d8;
 }
 
+body {
+    background-color: #e9eaed;
+}
+
+.holygrail-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+}
+
+.navbar-nav > li > a {
+    color: #333;
+    transition: all .2s ease-in-out;
+}
+.navbar-nav>li> a:active
+.navbar-nav>li> a:hover {
+    background-color: #EEF3F5;
+    border-bottom-color: #999;
+}
+
 .slice5 {
     width: 5px;
 }

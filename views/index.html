@@ -1,5 +1,4 @@
 <% layout('layout') -%>
-
 <div class="row">
 	<div class="col-md-9">
 		<div class="list-group">
@@ -11,13 +10,19 @@
 				<a><%%></a>
 				<span class="slice10"></span>
 				<div class="list-topic-cell">
-					<span class="list-topic-cell-title "><a href="/t/<%= topic._id%>"><%= topic.title%></a></span>
+					<span class="list-topic-cell-title "><a href="/topic/<%= topic._id%>"><%= topic.title%></a></span>
 					<div></div>
 					<span class="list-topic-cell-info">
-						<a href="#">lisi</a>
-						&nbsp;•&nbsp;  最后由 
-						<a href="#">zhangsan</a> 于 19 分钟前回复
-
+						<a href="#"><%= topic.author.loginname%></a>
+						
+						<%
+						if(topic.reply && topic.reply.author){
+						%>
+						&nbsp;•&nbsp;  最后由 <a href="#"><%= topic.reply.author.loginname%></a> <%= topic.reply.create_at_ago %>回复
+						<%
+						}
+						%>
+						
 					</span>
 				</div>
 				<span class="slice10"></span>

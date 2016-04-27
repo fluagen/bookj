@@ -17,14 +17,23 @@
 		</style>
 	</head>
 	<body>
-		<nav class="navbar navbar-inverse navbar-static-top top-navbar">
+		<nav class="navbar navbar-static-top holygrail-header">
 			<div class="container">
 				<div class="navbar-header">
 					<a class="navbar-brand" href="/">Jeeko</a>
 				</div>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/account/sign_up">注册</a></li>
+					<li><a href="/account/sign_in">登录</a></li>
+				</ul>
+				<form class="navbar-form navbar-right" role="search">
+					<input type="text" class="form-control" placeholder="输入关键字搜索">
+				</form>
+				
 			</div>
 		</nav>
-		<div class="container">
+		<div class="container ">
 			<%-body -%>
 		</div>
 	<footer></footer>

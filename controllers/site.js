@@ -16,6 +16,5 @@ exports.index = function(req, res, next) {
     var options = {
         sort: '-last_reply_at'
     };
-
     topicManager.getTopicsByQuery(query, options, ep.done('topics'));
 };

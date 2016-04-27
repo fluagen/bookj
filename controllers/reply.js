@@ -1,5 +1,5 @@
-var manager = require('../managers');
-var replyManager = manager.reply;
+var topicManager = require('../managers/topic');
+var replyManager = require('../managers/reply');
 var EventProxy = require('eventproxy');
 
 exports.add = function(req, res, next) {
@@ -8,8 +8,15 @@ exports.add = function(req, res, next) {
 
     var ep = new EventProxy();
     ep.all('reply', function(reply) {
-        res.redirect('/t/' + topic_id);
+        res.redirect('/topic/' + topic_id);
     });
     ep.fail(next);
-    replyManager.newAndSave(content, topic_id, null, ep.done('reply'));
+    replyManager.newAndSave(content, topic_id, null, ep.done(function(reply) {
+        topicManager.updateLastReply(topic_id, reply._id, function(err) {
+            if (err) {
+                return next(err);
+            }
+            ep.emit('reply', reply);
+        });
+    }));
 };

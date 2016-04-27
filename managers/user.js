@@ -99,6 +99,9 @@ exports.newAndSave = function(loginname, pass, email, avatar_url, active, callba
         callback = active;
         active = false;
     }
+    
+    active = true;
+
     var user = new User();
     user.loginname = loginname;
     user.pass = pass;
