@@ -18,7 +18,7 @@
 						<%
 						if(topic.reply && topic.reply.author){
 						%>
-						&nbsp;•&nbsp;  最后由 <a href="#"><%= topic.reply.author.loginname%></a> <%= topic.reply.create_at_ago %>回复
+						&nbsp;•&nbsp;  最后由 <a href="#"><%= topic.reply.author.loginname%></a> <%= topic.reply.create_at_ago() %>回复
 						<%
 						}
 						%>
