@@ -28,7 +28,7 @@ body {
     color: #333;
     transition: all .2s ease-in-out;
 }
-.navbar-nav>li> a:active
+.navbar-nav>li> a:active,
 .navbar-nav>li> a:hover {
     background-color: #EEF3F5;
     border-bottom-color: #999;
@@ -75,4 +75,23 @@ body {
 }
 .list-topic-cell-info a {
     color: #ABA8A6;
+}
+
+.avatar48 {
+    border-radius: 120px;
+    width: 48px;
+    height: 48px;
+
+}
+.list-header {
+    background-color: #f6f6f6;
+    border-radius: 3px 3px 0 0;
+}
+
+.editor-toolbar {
+    border: 0;
+    border-bottom: 1px solid #bbb;
+}
+.CodeMirror {
+    border: none;
 }

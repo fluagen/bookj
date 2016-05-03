@@ -7,7 +7,8 @@
 			var topic = topics[i];
 			%>
 			<div class="list-group-item list-topic">
-				<a><%%></a>
+				
+				<img class="avatar48" src="<%= topic.author.avatar%>">
 				<span class="slice10"></span>
 				<div class="list-topic-cell">
 					<span class="list-topic-cell-title "><a href="/topic/<%= topic._id%>"><%= topic.title%></a></span>
@@ -26,7 +27,7 @@
 					</span>
 				</div>
 				<span class="slice10"></span>
-				<span class="badge list-topic-cell-center">14</span>
+				<span class="badge list-topic-cell-center"><%= topic.reply_count%></span>
 			</div>
 			<%
 			}

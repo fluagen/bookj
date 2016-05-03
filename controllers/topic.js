@@ -3,6 +3,7 @@ var topicManager = require('../managers/topic');
 var replyManager = require('../managers/reply');
 var userManager = require('../managers/user');
 var validator = require('validator');
+var tools = require('../common/tools');
 
 
 /**
@@ -41,6 +42,8 @@ exports.index = function(req, res, next) {
 
         topic.author = author;
         topic.replies = replies;
+
+        topic.content = tools.markdownToHtml(topic.content);
 
         ep.emit('topic', topic);
         // get other_topics

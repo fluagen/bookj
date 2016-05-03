@@ -6,35 +6,32 @@
 				<b class="panel-title"><%= topic.title%></b>
 			</div>
 			<div class="panel-body">
-				<%= topic.content%>
+				<%- topic.content%>
 			</div>
 		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				回复
+		<div class="list-group">
+			<div class="list-group-item list-header"><%= topic.replies.length%>回复</div>
+			<%
+			for(var i=0; i < topic.replies.length; i++){
+			var reply = topic.replies[i];
+			%>
+			<div class="list-group-item">
+			<img class="avatar48" src="<%= reply.author.avatar%>">
+			#<%= i+1 %>楼
+			<div><%= reply.author.loginname%></div>
+			<div><%= reply.create_at_ago()%></div>
+			<%= reply.content%>
 			</div>
-			<div class="panel-body">
-				<ul>
-					<%
-					for(var i=0; i < topic.replies.length; i++){
-					var reply = topic.replies[i];
-					%>
-					<li><%= reply.content%></li>
-					<% } %>
-				</ul>
-			</div>
+			<% } %>
 		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				添加回复
-			</div>
-			<div class="panel-body">
+		<div class="list-group">
+			<div class="list-group-item list-header"><span>添加回复</span></div>
+			<div class="list-group-item">
 				<form id='reply_form' action='/<%= topic._id %>/reply' method='post'>
-					<textarea name="r_content" id="r_content" class="form-control" rows="3" placeholder="添加回复"></textarea>
+					<textarea name="r_content" id="r_content" class="form-control" rows="3"></textarea>
 				</form>
-				
 			</div>
-			<div class="panel-footer">
+			<div class="list-group-item">
 				<a class="btn btn-success" id="btn-save" href="#" role="button">回复
 				</a>
 			</div>
@@ -44,15 +41,17 @@
 		<%- partial('./sidebar') %>
 	</div>
 </div>
-<%
-var str =
-"<script >"
-	+"var simplemde = new SimpleMDE({ element: document.getElementById('r_content')});"
-	+"$('#btn-save').click(function(){"
-		+"$('#r_content').val(simplemde.value());"
-		+"$('#reply_form').submit();"
-		+"return false;"
-	+"});"
-+"</script>";
-block('tail-script').append(str)
-%>
+<script>
+	var simplemde = new SimpleMDE(
+		{ 
+			element: document.getElementById('r_content'),
+			status: false
+        }
+
+		);
+
+	$('#btn-save').click(function(){
+		$('#r_content').val(simplemde.value());
+		$('#reply_form').submit();
+	});
+</script>
