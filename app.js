@@ -10,6 +10,7 @@ var Loader = require('loader');
 var RedisStore = require('connect-redis')(session);
 
 var auth = require('./middlewares/auth');
+var errorPageMiddlewares = require('./middlewares/error_page');
 
 
 var app = express();
@@ -50,6 +51,8 @@ app.use(session({
 // custom middleware
 app.use(auth.authUser);
 app.use(auth.blockUser());
+
+app.use(errorPageMiddlewares.errorPage);
 
 //assets
 var assets = {};

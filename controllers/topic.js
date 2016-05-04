@@ -18,8 +18,8 @@ exports.index = function(req, res, next) {
     var topic_id = req.params.tid;
 
     if (topic_id.length !== 24) {
-        //return res.render404('此话题不存在或已被删除。');
-        return next();
+        return res.render404('此话题不存在或已被删除。');
+        //return next();
     }
     var events = ['topic', 'other_topics'];
     var ep = EventProxy.create(events,
