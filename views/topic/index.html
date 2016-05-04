@@ -17,13 +17,13 @@
 			%>
 			<div class="list-group-item">
 			<img class="avatar48" src="<%= reply.author.avatar%>">
-			#<%= i+1 %>楼
 			<div><%= reply.author.loginname%></div>
 			<div><%= reply.create_at_ago()%></div>
 			<%= reply.content%>
 			</div>
 			<% } %>
 		</div>
+		<% if (typeof(current_user) !== 'undefined' && current_user) { %>
 		<div class="list-group">
 			<div class="list-group-item list-header"><span>添加回复</span></div>
 			<div class="list-group-item">
@@ -36,6 +36,7 @@
 				</a>
 			</div>
 		</div>
+		<% } %>
 	</div>
 	<div class="col-md-3">
 		<%- partial('./sidebar') %>

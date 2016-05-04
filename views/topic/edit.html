@@ -22,14 +22,11 @@
 		<%- partial('./_profile') %>
 	</div>
 </div>
-<%
-var str = 	"<script >"
-		+"var simplemde = new SimpleMDE({ element: document.getElementById('content')});"
-		+"$('#btn-save').click(function(){"
-		+"$('#content').val(simplemde.value());"
-		+"$('form').submit();"
-		+"return false;"
-		+"});"
-+"</script>";
-block('tail-script').append(str)
-%>
+<script>
+	var simplemde = new SimpleMDE({ element: document.getElementById('content')});
+	$('#btn-save').click(function(){
+		$('#content').val(simplemde.value());
+		$('form').submit();
+		return false;
+	});
+</script>

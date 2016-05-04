@@ -44,8 +44,8 @@ exports.signup = function(req, res, next) {
     pass = validator.trim(pass);
     rePass = validator.trim(rePass);
 
-    if (loginname.length < 6) {
-        ep.emit('prop_err', '用户名至少需要6个字符。');
+    if (loginname.length < 5) {
+        ep.emit('prop_err', '用户名至少需要5个字符。');
         return;
     }
     if (!tools.validateId(loginname)) {
@@ -162,6 +162,7 @@ exports.login = function(req, res, next) {
                     break;
                 }
             }
+            res.locals.current_user = req.session.user = user;
             res.redirect(refer);
         }));
     });

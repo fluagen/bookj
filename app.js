@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var _ = require('lodash');
 var webRouter = require('./web_router');
 var Loader = require('loader');
+var RedisStore = require('connect-redis')(session);
 
 var auth = require('./middlewares/auth');
 
@@ -23,18 +24,27 @@ app.engine('html', require('ejs-mate'));
 
 
 //静态资源
-app.use('/public',express.static(staticDir));
+app.use('/public', express.static(staticDir));
 
 
 
 //中间件
-app.use(bodyParser.json({limit: '1mb'}));
-app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
+app.use(bodyParser.json({
+    limit: '1mb'
+}));
+app.use(bodyParser.urlencoded({
+    extended: true,
+    limit: '1mb'
+}));
 app.use(require('cookie-parser')('bookj'));
 app.use(session({
-  secret: 'bookj',
-  resave: true,
-  saveUninitialized: true,
+    secret: 'bookj',
+    resave: true,
+    saveUninitialized: true,
+    store: new RedisStore({
+        port: config.redis_port,
+        host: config.redis_host
+    })
 }));
 
 // custom middleware
@@ -53,6 +63,6 @@ _.extend(app.locals, {
 
 app.use('/', webRouter);
 
-app.listen(config.port,function(){
-	console.log('this is server started');
+app.listen(config.port, function() {
+    console.log('this is server started');
 });
