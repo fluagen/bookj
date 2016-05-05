@@ -16,7 +16,9 @@ mongoose.connect(config.db, {
 require('./topic');
 require('./reply');
 require('./user');
+require('./group');
 
 exports.Topic = mongoose.model('Topic');
 exports.Reply = mongoose.model('Reply');
 exports.User = mongoose.model('User');
+exports.Group = mongoose.model('Group');
