@@ -34,6 +34,7 @@ exports.getReplyById = function(id, callback) {
             reply.author = author;
             return callback(null, reply);
         });
+        userManager.getUserById(reply.author_id, ep.done('author'));
     });
     ep.fail(callback);
     Reply.findOne({

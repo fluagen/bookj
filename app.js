@@ -10,6 +10,7 @@ var Loader = require('loader');
 var RedisStore = require('connect-redis')(session);
 
 var auth = require('./middlewares/auth');
+var errorPage = require('./middlewares/error_page');
 
 
 var app = express();
@@ -49,7 +50,8 @@ app.use(session({
 
 //自定义中间件
 app.use(auth.authUser);
-app.use(auth.blockUser());
+app.use(auth.blockUser);
+app.use(errorPage.handle);
 
 
 //assets

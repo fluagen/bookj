@@ -4,7 +4,6 @@ var config = require('../config');
 
 
 exports.index = function(req, res, next) {
-    
     var ep = new EventProxy();
     ep.all('topics', function(topics) {
         res.render('index', {
@@ -16,5 +15,6 @@ exports.index = function(req, res, next) {
     var options = {
         sort: '-last_reply_at'
     };
+    ep.fail(next);
     topicManager.getTopicsByQuery(query, options, ep.done('topics'));
 };

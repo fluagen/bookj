@@ -76,8 +76,8 @@ exports.getTopicsByQuery = function(query, opt, callback) {
         });
         //增加作者、回复、组信息
         topics.forEach(function(topic, i) {
-            var ep2 = new EventProxy();
-            ep2.all('author', 'reply', 'group', function(author, reply, group) {
+            var proxy = new EventProxy();
+            proxy.all('author', 'reply', 'group', function(author, reply, group) {
                 if (author) {
                     topic.author = author;
                     topic.reply = reply;
@@ -87,17 +87,17 @@ exports.getTopicsByQuery = function(query, opt, callback) {
                 }
                 ep.emit('ready_topic');
             });
-            ep2.fail(callback);
-            userManager.getUserById(topic.author_id, ep2.done('author'));
+            proxy.fail(callback);
+            userManager.getUserById(topic.author_id, proxy.done('author'));
             if (topic.last_reply) {
-                replyManager.getReplyById(topic.last_reply, ep2.done('reply'));
+                replyManager.getReplyById(topic.last_reply, proxy.done('reply'));
             } else {
-                ep2.emit('reply', null);
+                proxy.emit('reply', null);
             }
             if (topic.group_id) {
-                groupManager.getGroupById(topic.group_id, ep2.done('group'));
+                groupManager.getGroupById(topic.group_id, proxy.done('group'));
             } else {
-                ep2.emit('group', null);
+                proxy.emit('group', null);
             }
         });
     });
