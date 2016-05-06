@@ -3,9 +3,9 @@ var Topic = models.Topic;
 var EventProxy = require('eventproxy');
 var userManager = require('./user');
 var replyManager = require('./reply');
+var groupManager = require('./group');
 
-var _            = require('lodash');
-var tools = require('../common/tools');
+var _ = require('lodash');
 
 
 /**
@@ -18,94 +18,92 @@ var tools = require('../common/tools');
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getTopicById = function (id, callback) {
-  var proxy = new EventProxy();
-  var events = ['topic', 'author', 'last_reply'];
-  proxy.assign(events, function (topic, author, last_reply) {
-    if (!author) {
-      return callback(null, null, null, null);
-    }
-    return callback(null, topic, author, last_reply);
-  }).fail(callback);
+exports.getTopicById = function(id, callback) {
 
-  Topic.findOne({_id: id}, proxy.done(function (topic) {
-    if (!topic) {
-      proxy.emit('topic', null);
-      proxy.emit('author', null);
-      proxy.emit('last_reply', null);
-      return;
-    }
-    proxy.emit('topic', topic);
+    var ep = new EventProxy();
+    ep.on('topic', function(topic) {
+        if (!topic) {
+            return callback(null, null);
+        }
+        ep.all('author', 'reply', 'group', function(author, reply, group) {
+            if (!author) {
+                return callback(null, null);
+            }
+            topic.author = author;
+            topic.reply = reply;
+            topic.group = group;
+            return callback(null, topic);
+        });
+        userManager.getUserById(topic.author_id, ep.done('author'));
 
-    userManager.getUserById(topic.author_id, proxy.done('author'));
+        if (topic.last_reply) {
+            replyManager.getReplyById(topic.last_reply, ep.done('reply'));
+        } else {
+            ep.emit('reply', null);
+        }
+        if (topic.group_id) {
+            groupManager.getGroupById(topic.group_id, ep.done('group'));
+        } else {
+            ep.emit('group', null);
+        }
 
-    if (topic.last_reply) {
-      replyManager.getReplyById(topic.last_reply, proxy.done('last_reply'));
-    } else {
-      proxy.emit('last_reply', null);
-    }
-  }));
+    });
+    ep.fail(callback);
+    Topic.findOne({
+        _id: id
+    }, ep.done('topic'));
 };
 
 
-/**
- * 获取关键词能搜索到的主题数量
- * Callback:
- * - err, 数据库错误
- * - count, 主题数量
- * @param {String} query 搜索关键词
- * @param {Function} callback 回调函数
- */
-exports.getCountByQuery = function (query, callback) {
-  Topic.count(query, callback);
-};
 
 
 /**
  * 根据关键词，获取主题列表
  * Callback:
  * - err, 数据库错误
- * - count, 主题列表
+ * - topics, 主题列表
  * @param {String} query 搜索关键词
  * @param {Object} opt 搜索选项
  * @param {Function} callback 回调函数
  */
-exports.getTopicsByQuery = function (query, opt, callback) {
-  query.deleted = false;
-  Topic.find(query, {}, opt, function (err, topics) {
-    if (err) {
-      return callback(err);
-    }
-    if (topics.length === 0) {
-      return callback(null, []);
-    }
+exports.getTopicsByQuery = function(query, opt, callback) {
+    var ep = new EventProxy();
+    ep.on('topics', function(topics) {
 
-    var proxy = new EventProxy();
-    proxy.after('topic_ready', topics.length, function () {
-      topics = _.compact(topics); // 删除不合规的 topic
-      return callback(null, topics);
+        ep.after('ready_topic', topics.length, function() {
+            topics = _.compact(topics); // 删除不合规的 topic
+            return callback(null, topics);
+        });
+        //增加作者、回复、组信息
+        topics.forEach(function(topic, i) {
+            var ep2 = new EventProxy();
+            ep2.all('author', 'reply', 'group', function(author, reply, group) {
+                if (author) {
+                    topic.author = author;
+                    topic.reply = reply;
+                    topic.group = group;
+                } else {
+                    topics[i] = null;
+                }
+                ep.emit('ready_topic');
+            });
+            ep2.fail(callback);
+            userManager.getUserById(topic.author_id, ep2.done('author'));
+            if (topic.last_reply) {
+                replyManager.getReplyById(topic.last_reply, ep2.done('reply'));
+            } else {
+                ep2.emit('reply', null);
+            }
+            if (topic.group_id) {
+                groupManager.getGroupById(topic.group_id, ep2.done('group'));
+            } else {
+                ep2.emit('group', null);
+            }
+        });
     });
-    proxy.fail(callback);
+    ep.fail(callback);
+    Topic.find(query, '', opt, ep.done('topics'));
 
-    topics.forEach(function (topic, i) {
-      var ep = new EventProxy();
-      ep.all('author', 'reply', function (author, reply) {
-        // 保证顺序
-        // 作者可能已被删除
-        if (author) {
-          topic.author = author;
-          topic.reply = reply;
-        } else {
-          topics[i] = null;
-        }
-        proxy.emit('topic_ready');
-      });
-
-      userManager.getUserById(topic.author_id, ep.done('author'));
-      // 获取主题的最后回复
-      replyManager.getReplyById(topic.last_reply, ep.done('reply'));
-    });
-  });
 };
 
 /**
@@ -119,32 +117,36 @@ exports.getTopicsByQuery = function (query, opt, callback) {
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getFullTopic = function (id, callback) {
-  var proxy = new EventProxy();
-  var events = ['topic', 'author', 'replies'];
-  proxy
-    .assign(events, function (topic, author, replies) {
-      callback(null, '', topic, author, replies);
-    })
-    .fail(callback);
+exports.getFullTopic = function(id, callback) {
 
-  Topic.findOne({_id: id, deleted: false}, proxy.done(function (topic) {
-    if (!topic) {
-      proxy.unbind();
-      return callback(null, '此话题不存在或已被删除。');
-    }
-    proxy.emit('topic', topic);
+    var ep = new EventProxy();
+    ep.on('topic', function(topic) {
+        if (!topic) {
+            return callback(null, null);
+        }
+        ep.all('author', 'replies', 'group', function(author, replies, group) {
+            if (!author) {
+                return callback(null, null);
+            }
+            topic.author = author;
+            topic.replies = replies;
+            topic.group = group;
+            return callback(null, topic);
+        });
+        userManager.getUserById(topic.author_id, ep.done('author'));
+        replyManager.getRepliesByTopicId(topic._id, ep.done('replies'));
 
-    userManager.getUserById(topic.author_id, proxy.done(function (author) {
-      if (!author) {
-        proxy.unbind();
-        return callback(null, '话题的作者丢了。');
-      }
-      proxy.emit('author', author);
-    }));
+        if (topic.group_id) {
+            groupManager.getGroupById(topic.group_id, ep.done('group'));
+        } else {
+            ep.emit('group', null);
+        }
+    });
+    ep.fail(callback);
+    Topic.findOne({
+        _id: id
+    }, ep.done('topic'));
 
-    replyManager.getRepliesByTopicId(topic._id, proxy.done('replies'));
-  }));
 };
 
 /**
@@ -153,66 +155,54 @@ exports.getFullTopic = function (id, callback) {
  * @param {String} replyId 回复ID
  * @param {Function} callback 回调函数
  */
-exports.updateLastReply = function (topicId, replyId, callback) {
-  Topic.findOne({_id: topicId}, function (err, topic) {
-    if (err || !topic) {
-      return callback(err);
-    }
-    topic.last_reply    = replyId;
-    topic.last_reply_at = new Date();
-    topic.reply_count += 1;
-    topic.save(callback);
-  });
+exports.updateLastReply = function(topicId, replyId, callback) {
+    Topic.findOne({
+        _id: topicId
+    }, function(err, topic) {
+        if (err || !topic) {
+            return callback(err);
+        }
+        topic.last_reply = replyId;
+        topic.last_reply_at = new Date();
+        topic.reply_count += 1;
+        topic.save(callback);
+    });
 };
 
-/**
- * 根据主题ID，查找一条主题
- * @param {String} id 主题ID
- * @param {Function} callback 回调函数
- */
-exports.getTopic = function (id, callback) {
-  Topic.findOne({_id: id}, callback);
-};
 
 /**
  * 将当前主题的回复计数减1，并且更新最后回复的用户，删除回复时用到
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.reduceCount = function (id, callback) {
-  Topic.findOne({_id: id}, function (err, topic) {
-    if (err) {
-      return callback(err);
-    }
+exports.reduceCount = function(id, callback) {
 
-    if (!topic) {
-      return callback(new Error('该主题不存在'));
-    }
-    topic.reply_count -= 1;
+    var ep = new EventProxy();
+    ep.on('topic', function(topic) {
+        topic.reply_count -= 1;
+        ep.on('last_reply', function(last_reply) {
+            topic.last_reply = last_reply;
+            if (!last_reply) {
+                topic.last_reply_at = null;
+            } else {
+                topic.last_reply_at = last_reply.create_at;
+            }
 
-    replyManager.getLastReplyByTopId(id, function (err, reply) {
-      if (err) {
-        return callback(err);
-      }
-
-      if (reply.length !== 0) {
-        topic.last_reply = reply[0]._id;
-        topic.last_reply_at = reply[0].create_at;
-      } else {
-        topic.last_reply = null;
-      }
-
-      topic.save(callback);
+            Topic.save(callback);
+        });
+        replyManager.getLastReplyByTopId(id, ep.done('last_reply'));
     });
-
-  });
+    ep.fail(callback);
+    ep.findOne({
+        _id: id
+    }, ep.done('topic'));
 };
 
-exports.newAndSave = function (title, content, authorId, callback) {
-  var topic       = new Topic();
-  topic.title     = title;
-  topic.content   = content;
-  topic.author_id = authorId;
+exports.newAndSave = function(title, content, authorId, callback) {
+    var topic = new Topic();
+    topic.title = title;
+    topic.content = content;
+    topic.author_id = authorId;
 
-  topic.save(callback);
+    topic.save(callback);
 };

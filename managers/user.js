@@ -2,7 +2,6 @@ var models = require('../models');
 var User = models.User;
 var EventProxy = require('eventproxy');
 var tools = require('../common/tools');
-var uuid = require('node-uuid');
 
 /**
  * 根据登录名查找用户
@@ -78,23 +77,8 @@ exports.getUsersByQuery = function(query, opt, callback) {
     User.find(query, '', opt, callback);
 };
 
-/**
- * 根据查询条件，获取一个用户
- * Callback:
- * - err, 数据库异常
- * - user, 用户
- * @param {String} name 用户名
- * @param {String} key 激活码
- * @param {Function} callback 回调函数
- */
-exports.getUserByNameAndKey = function(loginname, key, callback) {
-    User.findOne({
-        loginname: loginname,
-        retrieve_key: key
-    }, callback);
-};
 
-exports.newAndSave = function(loginname, pass, email, avatar_url, active, callback) {
+exports.newAndSave = function(loginname, pass, email, avatar_url, callback) {
     if (typeof active === 'function') {
         callback = active;
         active = false;

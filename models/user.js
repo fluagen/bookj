@@ -9,18 +9,11 @@ var UserSchema = new Schema({
   email: { type: String},
   pagehome: { type: String },
   avatar: { type: String },
-  is_block: {type: Boolean, default: false},
 
   topic_count: { type: Number, default: 0 },
   reply_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
-  update_at: { type: Date, default: Date.now },
-  active: { type: Boolean, default: false },
-
-  retrieve_time: {type: Number},
-  retrieve_key: {type: String},
-
-  accessToken: {type: String},
+  update_at: { type: Date, default: Date.now }
 });
 
 UserSchema.plugin(BaseModel);

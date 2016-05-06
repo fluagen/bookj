@@ -8,11 +8,10 @@ var GroupSchema = new Schema({
   email: { type: String},
   pagehome: { type: String },
   avatar: { type: String },
-  is_block: {type: Boolean, default: false},
+  description: {type: String },
   topic_count: { type: Number, default: 0 },
-  blog_count: { type: Number, default: 0 },
   creator_id: { type: ObjectId },
-  admin: [Schema.Types.ObjectId],
+  admin_ids: [Schema.Types.ObjectId],
   create_at: { type: Date, default: Date.now },
   update_at: { type: Date, default: Date.now }
 });

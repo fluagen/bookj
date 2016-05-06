@@ -9,8 +9,10 @@ var userManager = require('./user');
  * @param {String} id 回复ID
  * @param {Function} callback 回调函数
  */
-exports.getReply = function (id, callback) {
-  Reply.findOne({_id: id}, callback);
+exports.getReply = function(id, callback) {
+    Reply.findOne({
+        _id: id
+    }, callback);
 };
 
 /**
@@ -21,27 +23,22 @@ exports.getReply = function (id, callback) {
  * @param {String} id 回复ID
  * @param {Function} callback 回调函数
  */
-exports.getReplyById = function (id, callback) {
-  if (!id) {
-    return callback(null, null);
-  }
-  Reply.findOne({_id: id}, function (err, reply) {
-    if (err) {
-      return callback(err);
-    }
-    if (!reply) {
-      return callback(err, null);
-    }
+exports.getReplyById = function(id, callback) {
 
-    var author_id = reply.author_id;
-    userManager.getUserById(author_id, function (err, author) {
-      if (err) {
-        return callback(err);
-      }
-      reply.author = author;
-      callback(null, reply);
+    var ep = new EventProxy();
+    ep.on('reply', function(reply) {
+        ep.on('author', function(author) {
+            if (!author) {
+                return callback(null, null);
+            }
+            reply.author = author;
+            return callback(null, reply);
+        });
     });
-  });
+    ep.fail(callback);
+    Reply.findOne({
+        _id: id
+    }, ep.done('reply'));
 };
 
 /**
@@ -52,32 +49,35 @@ exports.getReplyById = function (id, callback) {
  * @param {String} id 主题ID
  * @param {Function} callback 回调函数
  */
-exports.getRepliesByTopicId = function (id, cb) {
-  Reply.find({topic_id: id, deleted: false}, '', {sort: 'create_at'}, function (err, replies) {
-    if (err) {
-      return cb(err);
-    }
-    if (replies.length === 0) {
-      return cb(null, []);
-    }
+exports.getRepliesByTopicId = function(id, callback) {
 
-    var proxy = new EventProxy();
-    proxy.after('reply_find', replies.length, function () {
-      cb(null, replies);
-    });
-    for (var j = 0; j < replies.length; j++) {
-      (function (i) {
-        var author_id = replies[i].author_id;
-        userManager.getUserById(author_id, function (err, author) {
-          if (err) {
-            return cb(err);
-          }
-          replies[i].author = author || { _id: '' };
-          proxy.emit('reply_find');
+    var ep = new EventProxy();
+
+    ep.on('replies', function(replies) {
+        ep.after('ready_reply', replies.length, function() {
+            replies = _.compact(replies); // 删除不合规的
+            return callback(null, replies);
         });
-      })(j);
-    }
-  });
+        replies.forEach(function(reply, i) {
+            userManager.getUserById(reply.author_id, function(err, author) {
+                if (!err) {
+                    return callback(err);
+                }
+                if (!author) {
+                    replies[i] = null;
+                } else {
+                    reply.author = author;
+                }
+                ep.emit('ready_reply');
+            });
+        });
+    });
+    ep.fail(callback);
+    Reply.find({
+        topic_id: id
+    }, '', {
+        sort: 'create_at'
+    }, ep.done('replies'));
 };
 
 /**
@@ -88,22 +88,20 @@ exports.getRepliesByTopicId = function (id, cb) {
  * @param {String} [replyId] 回复ID，当二级回复时设定该值
  * @param {Function} callback 回调函数
  */
-exports.newAndSave = function (content, topicId, authorId, replyId, callback) {
-  if (typeof replyId === 'function') {
-    callback = replyId;
-    replyId  = null;
-  }
-  var reply       = new Reply();
-  reply.content   = content;
-  reply.topic_id  = topicId;
-  reply.author_id = authorId;
+exports.newAndSave = function(content, topicId, authorId, replyId, callback) {
+    if (typeof replyId === 'function') {
+        callback = replyId;
+        replyId = null;
+    }
+    var reply = new Reply();
+    reply.content = content;
+    reply.topic_id = topicId;
+    reply.author_id = authorId;
 
-  if (replyId) {
-    reply.reply_id = replyId;
-  }
-  reply.save(function (err) {
-    callback(err, reply);
-  });
+    if (replyId) {
+        reply.reply_id = replyId;
+    }
+    reply.save(callback);
 };
 
 /**
@@ -111,19 +109,6 @@ exports.newAndSave = function (content, topicId, authorId, replyId, callback) {
  * @param topicId 主题ID
  * @param callback 回调函数
  */
-exports.getLastReplyByTopId = function (topicId, callback) {
-  Reply.find({topic_id: topicId, deleted: false}, '_id', {sort: {create_at : -1}, limit : 1}, callback);
-};
-
-exports.getRepliesByAuthorId = function (authorId, opt, callback) {
-  if (!callback) {
-    callback = opt;
-    opt      = null;
-  }
-  Reply.find({author_id: authorId}, {}, opt, callback);
-};
-
-// 通过 author_id 获取回复总数
-exports.getCountByAuthorId = function (authorId, callback) {
-  Reply.count({author_id: authorId}, callback);
+exports.getLastReplyByTopId = function(topicId, callback) {
+  Reply.findOne({topic_id: topicId}, '', {sort: -create_at}, callback);
 };
