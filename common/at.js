@@ -9,7 +9,7 @@
  * Module dependencies.
  */
 
-var User       = require('../proxy').User;
+var userManager       = require('../managers/user');
 var Message    = require('./message');
 var EventProxy = require('eventproxy');
 var _          = require('lodash');
@@ -69,7 +69,7 @@ exports.sendMessageToMentionUsers = function (text, topicId, authorId, reply_id,
   }
   callback = callback || _.noop;
 
-  User.getUsersByNames(fetchUsers(text), function (err, users) {
+  userManager.getUsersByNames(fetchUsers(text), function (err, users) {
     if (err || !users) {
       return callback(err);
     }
