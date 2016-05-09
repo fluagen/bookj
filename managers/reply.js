@@ -2,7 +2,7 @@ var models = require('../models');
 var Reply = models.Reply;
 var EventProxy = require('eventproxy');
 var userManager = require('./user');
-
+var _ = require('lodash');
 
 /**
  * 获取一条回复信息
@@ -61,7 +61,7 @@ exports.getRepliesByTopicId = function(id, callback) {
         });
         replies.forEach(function(reply, i) {
             userManager.getUserById(reply.author_id, function(err, author) {
-                if (!err) {
+                if (err) {
                     return callback(err);
                 }
                 if (!author) {

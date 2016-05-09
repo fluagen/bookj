@@ -13,14 +13,11 @@ var UserSchema = new Schema({
   topic_count: { type: Number, default: 0 },
   reply_count: { type: Number, default: 0 },
   create_at: { type: Date, default: Date.now },
-  update_at: { type: Date, default: Date.now }
+  update_at: { type: Date, default: Date.now },
+
+  active: {type: Boolean, default: true}
 });
 
 UserSchema.plugin(BaseModel);
-
-
-UserSchema.index({loginname: 1}, {unique: true});
-UserSchema.index({email: 1}, {unique: true});
-UserSchema.index({accessToken: 1});
 
 mongoose.model('User', UserSchema);

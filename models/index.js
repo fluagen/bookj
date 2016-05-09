@@ -17,8 +17,10 @@ require('./topic');
 require('./reply');
 require('./user');
 require('./group');
+require('./message');
 
 exports.Topic = mongoose.model('Topic');
 exports.Reply = mongoose.model('Reply');
 exports.User = mongoose.model('User');
 exports.Group = mongoose.model('Group');
+exports.Message = mongoose.model('Message');

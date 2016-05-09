@@ -97,6 +97,21 @@ exports.newAndSave = function(loginname, pass, email, avatar_url, callback) {
     user.save(callback);
 };
 
+/**
+ * 根据用户名列表查找用户列表
+ * Callback:
+ * - err, 数据库异常
+ * - users, 用户列表
+ * @param {Array} names 用户名列表
+ * @param {Function} callback 回调函数
+ */
+exports.getUsersByNames = function (names, callback) {
+  if (names.length === 0) {
+    return callback(null, []);
+  }
+  User.find({ loginname: { $in: names } }, callback);
+};
+
 exports.getGravatar = function(user) {
     return user.avatar || tools.makeGravatar(user.email);
 };

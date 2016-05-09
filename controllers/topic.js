@@ -1,6 +1,7 @@
 var EventProxy = require('eventproxy');
 var topicManager = require('../managers/topic');
 var userManager = require('../managers/user');
+var tools = require('../common/tools');
 
 
 /**
@@ -17,6 +18,7 @@ exports.index = function(req, res, next) {
          if (topic && topic.author) {
             topic.visit_count += 1;
             topic.save();
+            topic.content = tools.markdownToHtml(topic.content);
         } else {
             return res.render404('此话题不存在或已被删除。');
         }
@@ -29,7 +31,7 @@ exports.index = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
-    res.redirect('/topic/edit');
+    res.render('topic/edit', {});
 };
 
 exports.put = function(req, res, next) {

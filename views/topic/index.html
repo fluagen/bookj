@@ -4,6 +4,20 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<b class="panel-title"><%= topic.title%></b>
+				<div class="topic-info">
+					<a href="#"><%= topic.author.loginname%></a> &nbsp;•&nbsp;
+					于<%= topic.create_at_ago() %>发起
+					<%
+					if(topic.replies &&  topic.replies.length > 0){
+					var  lastreply = topic.replies[topic.replies.length-1];
+					%>
+					&nbsp;•&nbsp; 最后由<a href="#"><%= lastreply.author.loginname%></a>
+					&nbsp;•&nbsp; 于<%= lastreply.create_at_ago() %>回复
+					<%
+					}
+					%>
+					&nbsp;•&nbsp; <%= topic.visit_count %>次浏览
+				</div>
 			</div>
 			<div class="panel-body">
 				<%- topic.content%>
@@ -16,10 +30,10 @@
 			var reply = topic.replies[i];
 			%>
 			<div class="list-group-item">
-			<img class="avatar48" src="<%= reply.author.avatar%>">
-			<div><%= reply.author.loginname%></div>
-			<div><%= reply.create_at_ago()%></div>
-			<%= reply.content%>
+				<img class="avatar48" src="<%= reply.author.avatar%>">
+				<div><%= reply.author.loginname%></div>
+				<div><%= reply.create_at_ago()%></div>
+				<%= reply.content%>
 			</div>
 			<% } %>
 		</div>
@@ -44,13 +58,11 @@
 </div>
 <script>
 	var simplemde = new SimpleMDE(
-		{ 
+		{
 			element: document.getElementById('r_content'),
 			status: false
-        }
-
+}
 		);
-
 	$('#btn-save').click(function(){
 		$('#r_content').val(simplemde.value());
 		$('#reply_form').submit();

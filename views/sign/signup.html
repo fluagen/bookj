@@ -20,7 +20,7 @@
 							<% if (typeof(loginname) !== 'undefined') { %>
 							<input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于6位" class="form-control input-md" required="" value="<%=loginname%>"></input>
 							<% } else { %>
-							<input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于6位" class="form-control input-md" required=""></input>
+							<input id="loginname" name="loginname" type="text" placeholder="字母、数字，不少于5位" class="form-control input-md" required=""></input>
 							<% } %>
 						</div>
 					</div>
@@ -60,6 +60,6 @@
 		</div>
 	</div>
 	<div class="col-md-3">
-		<%- partial('./_profile') %>
+		
 	</div>
 </div>
